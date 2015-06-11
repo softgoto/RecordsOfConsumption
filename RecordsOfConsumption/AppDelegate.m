@@ -8,7 +8,13 @@
 
 #import "AppDelegate.h"
 
-@interface AppDelegate ()
+#import "MLBlackTransition.h"
+#import "RESideMenu.h"
+
+#import "AddViewController.h"
+#import "LeftSideViewController.h"
+
+@interface AppDelegate ()<RESideMenuDelegate>
 
 @end
 
@@ -17,6 +23,34 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    //Nav滑动的库
+    [MLBlackTransition validatePanPackWithMLBlackTransitionGestureRecognizerType:MLBlackTransitionGestureRecognizerTypePan];
+
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[AddViewController new]];
+    
+    LeftSideViewController *leftSideViewController = [LeftSideViewController new];
+    
+    //侧滑插件
+    RESideMenu *sideMenuViewController = [[RESideMenu alloc] initWithContentViewController:navigationController leftMenuViewController:leftSideViewController rightMenuViewController:nil];
+
+    sideMenuViewController.backgroundImage = [UIImage imageNamed:@"side-bg"];
+    sideMenuViewController.menuPreferredStatusBarStyle = 1; // UIStatusBarStyleLightContent
+    sideMenuViewController.delegate = self;
+    sideMenuViewController.contentViewShadowColor = [UIColor blackColor];
+    sideMenuViewController.contentViewShadowOffset = CGSizeMake(0, 0);
+    sideMenuViewController.contentViewShadowOpacity = 0.6;
+    sideMenuViewController.contentViewShadowRadius = 12;
+    sideMenuViewController.contentViewShadowEnabled = YES;
+    
+    sideMenuViewController.contentViewInLandscapeOffsetCenterX = -50.f;
+    sideMenuViewController.contentViewInPortraitOffsetCenterX  = -50.f;
+    
+    self.window.rootViewController = sideMenuViewController;
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
